@@ -8,65 +8,38 @@ import java.io.IOException;
 
 
 /**
- * 需要对总流量进行排序，因此需要修改一下将流量的 Bean 当作 key 来使用进行排序
+ * 需要对总流量进行排序，因此需要修改一下将流量的 Bean 当作 key 来使用进行排序——排序方案是倒排
  */
+
 public class KeyBean implements WritableComparable<KeyBean> {
-    // 数据是读 phone_records 数据，需要保留上行、下行流量以及总流量。保存为成员变量 作为结果值
-    private long upFlow;
-    private long downFlow;
-    private long totalFlow;
+    // 数据是读 phone_records 数据，需要保留电话号码作为 Key。本案例是为了熟悉 Key 的序列话刻意实现的
+    private String phone;
 
-    public long getUpFlow() {
-        return upFlow;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setUpFlow(long upFlow) {
-        this.upFlow = upFlow;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public long getDownFlow() {
-        return downFlow;
-    }
-
-    public void setDownFlow(long downFlow) {
-        this.downFlow = downFlow;
-    }
-
-    public long getTotalFlow() {
-        if (totalFlow == 0){
-            return this.downFlow + this.upFlow;
-        }
-        return this.totalFlow;
-
-
-    }
-
-    public void setTotalFlow() {
-        this.totalFlow = this.upFlow + this.downFlow;
-    }
-
-    // 空参构造
     public KeyBean() {
     }
 
 
     @Override
     public void write(DataOutput out) throws IOException {
-        out.writeLong(this.upFlow);
-        out.writeLong(this.downFlow);
-        out.writeLong(this.getTotalFlow());
+        out.writeChars(this.phone);
 
     }
 
     @Override
     public void readFields(DataInput in) throws IOException {
-        this.upFlow = in.readLong();
-        this.downFlow = in.readLong();
-        this.totalFlow = in.readLong();
+        phone = in.readLine();
     }
 
-    public static KeyBean read(DataInput in) throws IOException {
-        KeyBean bean = new KeyBean();
+    public static com.example.mapreduce.serialize.KeyBean run(DataInput in) throws IOException {
+        com.example.mapreduce.serialize.KeyBean bean = new com.example.mapreduce.serialize.KeyBean();
         bean.readFields(in);
 
         return bean;
@@ -74,6 +47,12 @@ public class KeyBean implements WritableComparable<KeyBean> {
 
     @Override
     public String toString() {
-        return upFlow + "\t" + downFlow + "\t" + totalFlow;
+        return phone;
+    }
+
+
+    @Override
+    public int compareTo(KeyBean o) {
+        return phone.compareTo(o.getPhone());
     }
 }

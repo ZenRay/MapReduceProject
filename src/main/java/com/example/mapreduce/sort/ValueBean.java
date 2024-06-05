@@ -1,6 +1,7 @@
 package com.example.mapreduce.sort;
 
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -8,17 +9,14 @@ import java.io.IOException;
 
 
 /**
- * Output Value 的序列化需要完成以下操作：
- * 1. 需要实现 Hadoop 的 Writable 接口
- * 2. 重写序列化和反序列化的方法 即 write 和 read 方法(版本存在差异，名称可能不一样)。3.3.4 中是需要实现一个 read 的静态方法，
- *      接口方法是 readField
- * 3. 重写空参构造函数
+ * 需要对总流量进行排序，因此需要修改一下将流量的 Bean 当作 key 来使用进行排序——排序方案是倒排
  */
-public class ValueBean implements Writable {
+public class ValueBean implements WritableComparable<ValueBean> {
     // 数据是读 phone_records 数据，需要保留上行、下行流量以及总流量。保存为成员变量 作为结果值
     private long upFlow;
     private long downFlow;
     private long totalFlow;
+
 
     public long getUpFlow() {
         return upFlow;
@@ -79,5 +77,16 @@ public class ValueBean implements Writable {
     @Override
     public String toString() {
         return upFlow + "\t" + downFlow + "\t" + totalFlow;
+    }
+
+    @Override
+    public int compareTo(ValueBean o) {
+        if (this.getTotalFlow() > o.getTotalFlow()){
+            return -1;
+        } else if (this.getTotalFlow() < o.getTotalFlow()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
