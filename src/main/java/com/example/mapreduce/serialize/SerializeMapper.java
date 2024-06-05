@@ -6,13 +6,13 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
 
-public class MapperSerialize extends Mapper<LongWritable, Text, MapperKeyBean, MapperValueBean> {
-    private MapperKeyBean outKey;
-    private MapperValueBean outValue;
+public class SerializeMapper extends Mapper<LongWritable, Text, KeyBean, ValueBean> {
+    private KeyBean outKey = new KeyBean();
+    private ValueBean outValue = new ValueBean();
 
     @Override
     protected void map(
-            LongWritable key, Text value, Mapper<LongWritable, Text, MapperKeyBean, MapperValueBean>.Context context
+            LongWritable key, Text value, Mapper<LongWritable, Text, KeyBean, ValueBean>.Context context
     ) throws IOException, InterruptedException {
         // 1. 读取每行数据进行处理
         String line = value.toString();

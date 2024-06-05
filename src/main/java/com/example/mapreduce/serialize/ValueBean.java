@@ -14,7 +14,7 @@ import java.io.IOException;
  *      接口方法是 readField
  * 3. 重写空参构造函数
  */
-public class MapperValueBean implements Writable {
+public class ValueBean implements Writable {
     // 数据是读 phone_records 数据，需要保留上行、下行流量以及总流量。保存为成员变量 作为结果值
     private long upFlow;
     private long downFlow;
@@ -50,7 +50,7 @@ public class MapperValueBean implements Writable {
     }
 
     // 空参构造
-    public MapperValueBean() {
+    public ValueBean() {
     }
 
 
@@ -69,12 +69,15 @@ public class MapperValueBean implements Writable {
         this.totalFlow = in.readLong();
     }
 
-    public static MapperValueBean read(DataInput in) throws IOException {
-        MapperValueBean bean = new MapperValueBean();
+    public static ValueBean read(DataInput in) throws IOException {
+        ValueBean bean = new ValueBean();
         bean.readFields(in);
 
         return bean;
     }
 
-
+    @Override
+    public String toString() {
+        return upFlow + "\t" + downFlow + "\t" + totalFlow;
+    }
 }
