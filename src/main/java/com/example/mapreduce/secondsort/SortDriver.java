@@ -36,7 +36,7 @@ public class SortDriver {
 
         // 6. 设置输入和输出路径
         FileInputFormat.setInputPaths(job, new Path("./data/output/flowstat"));
-        FileOutputFormat.setOutputPath(job, new Path("./data/output/sort"));
+        FileOutputFormat.setOutputPath(job, new Path("./data/output/secondsort"));
 
         // 7. 提交 Job
         boolean result = job.waitForCompletion(true);
