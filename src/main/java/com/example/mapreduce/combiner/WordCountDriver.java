@@ -33,15 +33,12 @@ public class WordCountDriver {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        /**
-         * 设置 Reduce Task 的数量，对应会生成结果文件数量，对应的 Key 进行分区会按照不同的 Partition
-         * 进行重新排序——数量没有超过 1 时使用的是内部类的方式实现
-         */
-        // job.setNumReduceTasks(3);
+        // 设置 mapper 阶段的 combiner。因为 combiner 处理和 reduce 的处理相同可以直接替换为 reduce 的 class
+        job.setCombinerClass(MapCombiner.class);
 
         // 6. 设置输入和输出路径
-        FileInputFormat.setInputPaths(job, new Path("./data/input"));
-        FileOutputFormat.setOutputPath(job, new Path("./data/output/wordcount"));
+        FileInputFormat.setInputPaths(job, new Path("./data/input/hello.txt"));
+        FileOutputFormat.setOutputPath(job, new Path("./data/output/combiner"));
 
         // 7. 提交 Job
         boolean result = job.waitForCompletion(true);
