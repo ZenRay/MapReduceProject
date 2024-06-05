@@ -30,9 +30,14 @@ public class SerializeDriver{
         job.setOutputKeyClass(KeyBean.class);
         job.setOutputValueClass(ValueBean.class);
 
+        // 设置定制化的 partition，且需要设置的 partition 超过 1
+        job.setPartitionerClass(ProvinePartition.class);
+        job.setNumReduceTasks(5);
+
+
         // 6. 设置输入和输出路径
         FileInputFormat.setInputPaths(job, new Path("./data/input/phone_records.txt"));
-        FileOutputFormat.setOutputPath(job, new Path("./data/output/flowstat"));
+        FileOutputFormat.setOutputPath(job, new Path("./data/output/partition"));
 
         // 7. 提交 Job
         boolean result = job.waitForCompletion(true);
