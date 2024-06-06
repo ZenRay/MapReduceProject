@@ -46,7 +46,7 @@ public class JoinDriver {
 
         // 6.
         FileInputFormat.setInputPaths(job, new Path("./data/input/join/orders.txt"));
-        FileOutputFormat.setOutputPath(job, new Path("./data/output/mapjoin "));
+        FileOutputFormat.setOutputPath(job, new Path("./data/output/mapjoin"));
 
         // 7.
         boolean result = job.waitForCompletion(true);
